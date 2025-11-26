@@ -1,3 +1,7 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+# yamllint disable rule:line-length
+# yamllint disable rule:comments
 name: Nix
 on:
   push:
@@ -14,12 +18,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Install Nix
         uses: DeterminateSystems/determinate-nix-action@main
-
       - name: Setup Nix cache
         uses: DeterminateSystems/magic-nix-cache-action@main
-
       - name: Run Nix flake check
         run: nix flake check --all-systems --no-build

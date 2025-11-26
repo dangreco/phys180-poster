@@ -55,21 +55,28 @@
 
                 git
                 act
+                husky
                 go-task
                 parallel
 
+                # Typst
+                inter
                 typst
                 tinymist
-                zathura
-                inter
                 typstyle
+                zathura
+
+                # YAML
+                yamlfmt
+                yamllint
               ];
 
               shellHook = ''
+                export TYPST_FONT_PATHS="${pkgs.inter}/share/fonts"
                 rm -rf .zed
                 mkdir -p .zed
                 cp ${__zed}/settings.json .zed/settings.json
-                export TYPST_FONT_PATHS="${pkgs.inter}/share/fonts"
+                husky install > /dev/null 2>&1 || true
               '';
             };
         };
