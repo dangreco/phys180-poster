@@ -21,50 +21,79 @@
           ...
         }:
         {
-          devShells.default =
-            let
-              __zed = pkgs.writeTextFile {
-                name = "zed-settings";
-                text = builtins.toJSON {
-                  lsp = {
-                    tinymist = {
-                      binary = {
-                        path = "${pkgs.tinymist}/bin/tinymist";
-                      };
-                    };
-                  };
-                  languages = {
-                    Typst = {
-                      formatter = {
-                        external = {
-                          command = "${pkgs.typstyle}/bin/typstyle";
+          devShells = {
+            default =
+              let
+                __zed = pkgs.writeTextFile {
+                  name = "zed-settings";
+                  text = builtins.toJSON {
+                    lsp = {
+                      tinymist = {
+                        binary = {
+                          path = "${pkgs.tinymist}/bin/tinymist";
                         };
                       };
-                      format_on_save = "on";
+                    };
+                    languages = {
+                      Typst = {
+                        formatter = {
+                          external = {
+                            command = "${pkgs.typstyle}/bin/typstyle";
+                          };
+                        };
+                        format_on_save = "on";
+                      };
                     };
                   };
+                  destination = "/settings.json";
                 };
-                destination = "/settings.json";
+              in
+              pkgs.mkShell {
+                nativeBuildInputs = with pkgs; [
+                  nil
+                  nixd
+                  nixfmt
+
+                  git
+                  act
+                  husky
+                  pinact
+                  go-task
+                  parallel
+
+                  # Typst
+                  inter
+                  typst
+                  tinymist
+                  typstyle
+                  zathura
+
+                  # YAML
+                  yamlfmt
+                  yamllint
+                ];
+
+                shellHook = ''
+                  export TYPST_FONT_PATHS="${pkgs.inter}/share/fonts"
+                  rm -rf .zed
+                  mkdir -p .zed
+                  cp ${__zed}/settings.json .zed/settings.json
+                  husky install > /dev/null 2>&1 || true
+                '';
               };
-            in
-            pkgs.mkShell {
+            build = pkgs.mkShell {
               nativeBuildInputs = with pkgs; [
                 nil
                 nixd
                 nixfmt
 
-                git
-                act
-                husky
                 go-task
-                parallel
 
                 # Typst
                 inter
                 typst
                 tinymist
                 typstyle
-                zathura
 
                 # YAML
                 yamlfmt
@@ -73,12 +102,9 @@
 
               shellHook = ''
                 export TYPST_FONT_PATHS="${pkgs.inter}/share/fonts"
-                rm -rf .zed
-                mkdir -p .zed
-                cp ${__zed}/settings.json .zed/settings.json
-                husky install > /dev/null 2>&1 || true
               '';
             };
+          };
         };
     };
 }
