@@ -1,0 +1,42 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+tasks:
+  clean:
+    desc: Clean Typst build artifacts
+    silent: true
+    cmds:
+      - rm -rf _build/
+
+  build:
+    desc: Build Typst document
+    silent: true
+    deps:
+      - clean
+    cmds:
+      - scripts/typst/build.sh src/main.typ _build/main.pdf
+
+  watch:
+    desc: Build Typst document in watch mode
+    silent: true
+    cmds:
+      - scripts/typst/watch.sh src/main.typ _build/main.pdf
+
+  test:
+    desc: Test Typst document
+    silent: true
+    cmds:
+      - scripts/typst/test.sh src/main.typ
+
+  check:
+    desc: Check Typst document
+    silent: true
+    cmds:
+      - typstyle --check src/
+
+  fix:
+    desc: Fix Typst document
+    silent: true
+    cmds:
+      - typstyle --inplace --timing src/

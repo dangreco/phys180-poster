@@ -55,7 +55,8 @@
 
                 git
                 act
-                just
+                go-task
+                parallel
 
                 typst
                 tinymist

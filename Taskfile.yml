@@ -1,0 +1,47 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+includes:
+  typst: tasks/typst.yml
+tasks:
+  default:
+    desc: List tasks
+    silent: true
+    cmds:
+      - task --list
+
+  clean:
+    desc: Clean build artifacts
+    silent: true
+    deps:
+      - typst:clean
+
+  build:
+    desc: Build project
+    silent: true
+    deps:
+      - typst:build
+
+  watch:
+    desc: Build project in watch mode
+    silent: true
+    deps:
+      - typst:watch
+
+  test:
+    desc: Test project
+    silent: true
+    deps:
+      - typst:test
+
+  check:
+    desc: Check project formatting
+    silent: true
+    deps:
+      - typst:check
+
+  fix:
+    desc: Fix project formatting
+    silent: true
+    deps:
+      - typst:fix
